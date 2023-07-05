@@ -8,6 +8,8 @@ class ButtonWidget extends StatefulWidget {
       this.isNavPush = false,
       this.isNavReplace = false,
       this.isNavBack = false,
+      this.isPressed = true,
+      this.onPressed,
       this.page,
       super.key});
 
@@ -18,22 +20,24 @@ class ButtonWidget extends StatefulWidget {
   bool isNavPush;
   bool isNavReplace;
   bool isNavBack;
+  bool isPressed;
   Widget? page;
+  VoidCallback? onPressed;
 }
 
 class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        widget.isNavBack
-            ? navBackTransition(context)
-            : widget.isNavPush
-                ? navPushTransition(context, widget.page!)
-                : widget.isNavReplace
-                    ? navReplaceTransition(context, widget.page!)
-                    : widget.page;
-      },
+      onPressed: widget.isPressed
+          ? () => widget.isNavBack
+              ? navBackTransition(context)
+              : widget.isNavPush
+                  ? navPushTransition(context, widget.page!)
+                  : widget.isNavReplace
+                      ? navReplaceTransition(context, widget.page!)
+                      : widget.page
+          : widget.onPressed,
       style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.white,

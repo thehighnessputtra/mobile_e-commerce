@@ -17,7 +17,7 @@ class TextFieldWidget extends StatefulWidget {
 }
 
 class _TextFieldWidgetState extends State<TextFieldWidget> {
-  bool hideText = false;
+  bool hideText = true;
 
   @override
   Widget build(BuildContext context) {

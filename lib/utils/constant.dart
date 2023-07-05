@@ -19,6 +19,26 @@ double clip32 = 32;
 double clip36 = 36;
 double clip40 = 40;
 
+SizedBox sh5 = const SizedBox(
+  height: 5.0,
+);
+SizedBox sh10 = const SizedBox(
+  height: 10.0,
+);
+SizedBox sh20 = const SizedBox(
+  height: 20.0,
+);
+
+SizedBox sw5 = const SizedBox(
+  width: 5.0,
+);
+SizedBox sw10 = const SizedBox(
+  width: 10.0,
+);
+SizedBox sw20 = const SizedBox(
+  width: 20.0,
+);
+
 EdgeInsets pagePadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 5);
 
 TextStyle titleTS = const TextStyle(
