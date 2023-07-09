@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "30900502989",
+    "project_id": "mobile-e-commerce-ygstore",
+    "storage_bucket": "mobile-e-commerce-ygstore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30900502989:android:99137a4a1c323e56b30484",
+        "android_client_info": {
+          "package_name": "com.example.test_aplikasi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30900502989-k9njvdehghldt85kdjdvo9prs41i5jle.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmtNHUIGytDpwY1RQ0R5fIZTbxm_iimt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30900502989-k9njvdehghldt85kdjdvo9prs41i5jle.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

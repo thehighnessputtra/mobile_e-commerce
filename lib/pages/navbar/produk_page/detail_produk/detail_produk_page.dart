@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:test_aplikasi/utils/constant.dart';
 
 class DetailProdukPage extends StatefulWidget {
   const DetailProdukPage({super.key});
@@ -23,32 +24,49 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text("Title"),
+        title: Text("Produk"),
       ),
-      body: Container(
-          child: CarouselSlider.builder(
-        options: CarouselOptions(
-          aspectRatio: 2.0,
-          enlargeCenterPage: false,
-          viewportFraction: 1,
-        ),
-        itemCount: (imgList.length / 2).round(),
-        itemBuilder: (context, index, realIdx) {
-          final int first = index * 2;
-          final int second = first + 1;
-          return Row(
-            children: [first, second].map((idx) {
-              return Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Image.network(imgList[idx], fit: BoxFit.cover),
-                ),
+      body: Column(
+        children: [
+          Container(
+            color: Colors.yellow,
+            height: 200,
+          ),
+          sh5,
+          CarouselSlider(
+            items: [1, 2, 3, 4, 5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: const BoxDecoration(color: Colors.yellow),
+                      child: Text(
+                        'text $i',
+                        style: const TextStyle(fontSize: 16.0),
+                      ));
+                },
               );
             }).toList(),
-          );
-        },
-      )),
+            options: CarouselOptions(
+              height: 70,
+              aspectRatio: 16 / 9,
+              viewportFraction: 0.4,
+              initialPage: 0,
+              enableInfiniteScroll: true,
+              reverse: false,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+          sh10,
+          Text(
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+        ],
+      ),
     );
   }
 }
