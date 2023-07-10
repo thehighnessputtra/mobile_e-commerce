@@ -23,7 +23,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     return TextFormField(
         controller: widget.controllerName,
-        obscureText: hideText,
+        obscureText: widget.isVisibility! ? hideText : false,
         validator: widget.validator,
         decoration: InputDecoration(
           isDense: true,

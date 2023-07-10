@@ -8,7 +8,7 @@ class ButtonWidget extends StatefulWidget {
       this.isNavPush = false,
       this.isNavReplace = false,
       this.isNavBack = false,
-      this.isPressed = true,
+      this.isPressed = false,
       this.onPressed,
       this.page,
       super.key});
@@ -30,14 +30,14 @@ class _ButtonWidgetState extends State<ButtonWidget> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: widget.isPressed
-          ? () => widget.isNavBack
+          ? widget.onPressed
+          : () => widget.isNavBack
               ? navBackTransition(context)
               : widget.isNavPush
                   ? navPushTransition(context, widget.page!)
                   : widget.isNavReplace
                       ? navReplaceTransition(context, widget.page!)
-                      : widget.page
-          : widget.onPressed,
+                      : widget.page,
       style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.white,

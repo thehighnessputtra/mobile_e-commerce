@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:test_aplikasi/pages/auth/login_page.dart';
+import 'package:test_aplikasi/services/firebase_services.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 import 'package:test_aplikasi/widgets/button_widget.dart';
 import 'package:test_aplikasi/widgets/dialog_widget.dart';
 import 'package:test_aplikasi/widgets/textfield_widget.dart';
+import 'package:file_picker/file_picker.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,6 +22,9 @@ TextEditingController _controllerEmail = TextEditingController();
 TextEditingController _controllerPassword = TextEditingController();
 
 class _RegisterPageState extends State<RegisterPage> {
+  String? avatarName;
+  String? avatarURL;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,12 +110,49 @@ class _RegisterPageState extends State<RegisterPage> {
                 }),
             ButtonWidget(
               btnName: "Login",
-              isNavReplace: true,
-              page: const LoginPage(),
+              isPressed: true,
+              onPressed: () {
+                FirebaseService(FirebaseAuth.instance).signUpEmail(
+                    email: _controllerEmail.text,
+                    avaName: avatarName!,
+                    avaURL: avatarURL!,
+                    password: _controllerPassword.text,
+                    name: _controllerNama.text,
+                    context: context);
+              },
             )
           ],
         ),
       ),
     );
+  }
+
+  uploadImage() async {
+    final result = await FilePicker.platform
+        .pickFiles(allowMultiple: false, type: FileType.image);
+    if (result != null) {
+      final path = result.files.single.path!;
+      final fileName = result.files.single.name;
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      await storage
+          .ref('users/${_controllerEmail.text}/avatar/$fileName')
+          .putFile(File(path));
+      String getDownloadUrl = await storage
+          .ref('users/${_controllerEmail.text}/avatar/$fileName')
+          .getDownloadURL();
+      // print("DOWNLOAD AVATAR = $getDownloadUrl");
+      setState(() {
+        avatarName = fileName;
+        avatarURL = getDownloadUrl;
+      });
+
+      // ignore: use_build_context_synchronously
+      customDialog(context,
+          title: "INFO", content: Text("Avatar sukses diupload!"));
+    } else {
+      customDialog(context,
+          title: "INFO", content: Text("Avatar gagal diupload!"));
+    }
   }
 }

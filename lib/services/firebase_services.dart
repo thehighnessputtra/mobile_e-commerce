@@ -18,6 +18,29 @@ class FirebaseService {
 
   Stream<User?> get authState => auth.authStateChanges();
 
+  Future<void> signUpEmail(
+      {required String email,
+      required String password,
+      required String name,
+      required String avaURL,
+      required String avaName,
+      required BuildContext context}) async {
+    try {
+      await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) => {
+                postRegistToFirestore(
+                    avaName: avaName, avaURL: avaURL, email: email, name: name)
+              });
+
+      // ignore: use_build_context_synchronously
+      authRoute(context, "Register success!", const LoginPage());
+    } on FirebaseAuthException catch (e) {
+      customDialog(context,
+          title: "WARNING!", content: Text("Email sudah digunakan!"));
+    }
+  }
+
   Future<void> signInEmail(
       {required String email,
       required String password,
@@ -62,218 +85,18 @@ class FirebaseService {
     );
   }
 
-//   postListBookingToFirestore(
-//       {required DateTime tanggal,
-//       required String title,
-//       required String nama,
-//       required String jam,
-//       required int noHp,
-//       required String tipeMotor,
-//       required String noPolisi,
-//       required String jenisServis,
-//       required String jumlahKm,
-//       required String gambarNama,
-//       required String gambarUrl}) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection('listBooking');
-//     fireStore.doc(title).set({
-//       "tanggal": tanggal,
-//       "jam": jam,
-//       "nama": nama,
-//       "status": "Menunggu",
-//       "noHp": noHp,
-//       "tipeMotor": tipeMotor,
-//       "noPolisi": noPolisi,
-//       "jenisServis": jenisServis,
-//       "jumlahKm": jumlahKm,
-//       "gambarNama": gambarNama,
-//       "gambarUrl": gambarUrl,
-//       "komentar": "Belum ada komentar",
-//       "rating": "Belum ada rating",
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     });
-//   }
-
-//   postLogBookingToFireStore({
-//     required String title,
-//     required String jam,
-//     required String nama,
-//     required DateTime tanggal,
-//     required int noHp,
-//     required String tipeMotor,
-//     required String noPolisi,
-//     required String jenisServis,
-//     required String jumlahKm,
-//     required String gambarNama,
-//     required String emailAdmin,
-//     required String gambarUrl,
-//     required String status,
-//   }) {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection('logBooking');
-//     fireStore.doc(title).set({
-//       "status": status,
-//       "updateBy": emailAdmin,
-//       "tanggal": tanggal,
-//       "jam": jam,
-//       "nama": nama,
-//       "noHp": noHp,
-//       "tipeMotor": tipeMotor,
-//       "noPolisi": noPolisi,
-//       "jenisServis": jenisServis,
-//       "jumlahKm": jumlahKm,
-//       "gambarNama": gambarNama,
-//       "gambarUrl": gambarUrl,
-//       "komentar": "Belum ada komentar",
-//       "rating": "Belum ada rating",
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     });
-//   }
-
-//   updateStatusListBooking({
-//     required String title,
-//     required String status,
-//   }) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection("listBooking");
-//     fireStore.doc(title).update({
-//       "status": status,
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     });
-//   }
-
-//   deleteListBookingToFirebase({required String title}) {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection('listBooking');
-//     fireStore.doc(title).delete();
-//   }
-
-//   postJadwalServisToFirestore(
-//       {required DateTime tanggal,
-//       required String gambarNama,
-//       required String gambarUrl,
-//       required String jenisServis,
-//       required String jumlahKm,
-//       required String nama,
-//       required String jam,
-//       required String title,
-//       required int noHp,
-//       required String noTiket,
-//       required String noPolisi,
-//       required String emailAdmin,
-//       required String tipeMotor}) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection("jadwalServis");
-//     fireStore.doc(title).set({
-//       "gambarNama": gambarNama,
-//       "gambarUrl": gambarUrl,
-//       "jenisServis": jenisServis,
-//       "jumlahKm": jumlahKm,
-//       "nama": nama,
-//       "noHp": noHp,
-//       "noPolisi": noPolisi,
-//       "tanggal": tanggal,
-//       "jam": jam,
-//       "noTiket": noTiket,
-//       "tipeMotor": tipeMotor,
-//       "komentar": "Belum ada komentar",
-//       "status": "Booking diterima",
-//       "rating": "Belum ada rating",
-//       "updateBy": emailAdmin,
-//       "updateTime": DateTime.now().millisecondsSinceEpoch,
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     });
-//   }
-
-//   deleteJadwalServisToFirebase({required String title}) {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection('jadwalServis');
-//     fireStore.doc(title).delete();
-//   }
-
-//   updateStatusLogBooking({
-//     required String title,
-//     required String status,
-//   }) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection("logBooking");
-//     fireStore.doc(title).update({
-//       "status": status,
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     });
-//   }
-
-//   postSelesaiServisToFirestore(
-//       {required DateTime tanggal,
-//       required String gambarNama,
-//       required String gambarUrl,
-//       required String jenisServis,
-//       required String jumlahKm,
-//       required String nama,
-//       required String jam,
-//       required int noHp,
-//       required String noPolisi,
-//       required String emailAdmin,
-//       required String tipeMotor}) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection("selesaiServis");
-//     fireStore.doc(DateTime.now().millisecondsSinceEpoch.toString()).set({
-//       "gambarNama": gambarNama,
-//       "gambarUrl": gambarUrl,
-//       "jenisServis": jenisServis,
-//       "jumlahKm": jumlahKm,
-//       "nama": nama,
-//       "noHp": noHp,
-//       "noPolisi": noPolisi,
-//       "tanggal": tanggal,
-//       "jam": jam,
-//       "tipeMotor": tipeMotor,
-//       "status": "Servis selesai",
-//       "updateBy": emailAdmin,
-//       "createTime": DateTime.now().millisecondsSinceEpoch.toString(),
-//     });
-//   }
-
-//   updateReviewLogBooking({
-//     required BuildContext context,
-//     required String title,
-//     required String rating,
-//     required String komentar,
-//   }) async {
-//     CollectionReference fireStore =
-//         FirebaseFirestore.instance.collection("logBooking");
-//     fireStore.doc(title).update({
-//       "rating": rating,
-//       "komentar": komentar,
-//       "createTime":
-//           DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//     }).then((value) {
-//       FocusManager.instance.primaryFocus?.unfocus();
-//       dialogInfoWithoutDelay(context, "Review sukses diberikan!");
-//     }).onError((error, stackTrace) {
-//       dialogInfoWithoutDelay(context,
-//           "Review gagal diberikan!\n\nPastikan sudah memasukan tanggal, jam servis dan nomor yang sesuai dengan booking");
-//     });
-//   }
-// }
-
-// updateTimeServices({
-//   required String jam,
-//   required int hitungJam,
-//   required int hitungMontir,
-// }) async {
-//   CollectionReference fireStore =
-//       FirebaseFirestore.instance.collection("timeServices");
-//   fireStore.doc("UFYfUtf5FW3sxPB2iCPg").update({
-//     jam: hitungJam,
-//     "montir": hitungMontir,
-//     "updateTime":
-//         DateFormat("EEEE, d-MMMM-y H:m:s", "ID").format(DateTime.now()),
-//   });
-// }
+  postRegistToFirestore(
+      {required String email,
+      required String name,
+      required String avaURL,
+      required String avaName}) async {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+    ref.doc(user!.email).set({
+      'email': email,
+      'name': name,
+      'avatarURL': avaURL,
+      'avatarName': avaName
+    });
+  }
 }

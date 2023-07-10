@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_aplikasi/pages/auth/register_page.dart';
 import 'package:test_aplikasi/pages/navbar/home_page/home_page.dart';
 import 'package:test_aplikasi/pages/navbar/navbar.dart';
+import 'package:test_aplikasi/services/firebase_services.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 import 'package:test_aplikasi/widgets/button_widget.dart';
 import 'package:test_aplikasi/widgets/textfield_widget.dart';
@@ -44,8 +46,13 @@ class LoginPage extends StatelessWidget {
             ),
             ButtonWidget(
               btnName: "Login",
-              isNavReplace: true,
-              page: NavBottomBar(),
+              isPressed: true,
+              onPressed: () {
+                FirebaseService(FirebaseAuth.instance).signInEmail(
+                    email: _controllerEmail.text,
+                    password: _controllerPassword.text,
+                    context: context);
+              },
             ),
           ],
         ),
