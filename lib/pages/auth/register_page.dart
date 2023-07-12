@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:test_aplikasi/pages/auth/login_page.dart';
 import 'package:test_aplikasi/services/firebase_services.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 import 'package:test_aplikasi/widgets/button_widget.dart';
@@ -121,16 +122,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 }),
             ButtonWidget(
               btnName: "Login",
-              isPressed: true,
-              onPressed: () {
-                FirebaseService(FirebaseAuth.instance).signUpEmail(
-                    email: _controllerEmail.text,
-                    avaName: avatarName!,
-                    avaURL: avatarURL!,
-                    password: _controllerPassword.text,
-                    name: _controllerNama.text,
-                    context: context);
-              },
+              isNavReplace: true,
+              page: const LoginPage(),
             )
           ],
         ),

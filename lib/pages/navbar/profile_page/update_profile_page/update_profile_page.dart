@@ -27,7 +27,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   String email = "...";
   String nama = "...";
   TextEditingController controllerNama = TextEditingController();
-  TextEditingController controllerEmail = TextEditingController();
 
   Future getDocID() async {
     await FirebaseFirestore.instance
@@ -99,7 +98,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             fieldName: nama,
           ),
           TextFieldWidget(
-            controllerName: controllerEmail,
+            isReadOnly: true,
             fieldName: email,
           ),
           Row(
@@ -112,9 +111,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   customDialog(context,
                       title: "KONFIRMASI", confirmButton: true, yesPressed: () {
                     FirebaseService(FirebaseAuth.instance).updateProfile(
-                        email: controllerEmail.text == ""
-                            ? email
-                            : controllerEmail.text,
+                        email: email,
                         name: controllerNama.text == ""
                             ? nama
                             : controllerNama.text,
@@ -126,10 +123,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Email = ${controllerEmail.text == "" ? email : controllerEmail.text}",
-                              style: dialogContentTS,
-                            ),
                             Text(
                                 "Nama = ${controllerNama.text == "" ? nama : controllerNama.text}",
                                 style: dialogContentTS),

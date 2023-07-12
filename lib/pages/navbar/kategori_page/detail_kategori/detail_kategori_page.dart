@@ -33,9 +33,10 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final dataProduk = snapshot.data!.docs[index];
+
                       return Column(
                           children: widget.listGame.map((e) {
-                        if (e[index] == dataProduk.get("nama")[index]) {
+                        if (e == dataProduk.get("nama")) {
                           return ProdukCard(
                             nama: dataProduk.get("nama"),
                             deskripsi: dataProduk.get("deskripsi"),
@@ -43,6 +44,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                             kategori: dataProduk.get("kategori"),
                             poster: dataProduk.get("poster"),
                             screenshot: dataProduk.get("screenshot"),
+                            rating: dataProduk.get("rating"),
                           );
                         } else {
                           return SizedBox();

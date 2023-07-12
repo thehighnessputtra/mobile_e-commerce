@@ -62,6 +62,7 @@ class _ListProdukPageState extends State<ListProdukPage> {
           String storageNama = itemsList['nama'];
           String storagePoster = itemsList['poster'];
           int storageHarga = itemsList['harga'];
+          num storageRating = itemsList['rating'];
           String storageDeskripsi = itemsList['deskripsi'];
           List storageKategori = itemsList['kategori'];
           List storageScreenshot = itemsList['screenshot'];
@@ -69,6 +70,7 @@ class _ListProdukPageState extends State<ListProdukPage> {
           return ProdukCard(
             poster: storagePoster,
             harga: storageHarga,
+            rating: storageRating,
             deskripsi: storageDeskripsi,
             screenshot: storageScreenshot,
             nama: storageNama,

@@ -12,13 +12,15 @@ class ProdukCard extends StatelessWidget {
       this.poster,
       this.deskripsi,
       this.harga,
-      this.screenshot});
+      this.screenshot,
+      this.rating});
   String? nama;
   List? kategori;
   List? screenshot;
   int? harga;
   String? deskripsi;
   String? poster;
+  num? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +55,29 @@ class ProdukCard extends StatelessWidget {
           trailing: Text(NumberFormat.currency(
                   locale: 'id', symbol: 'RP ', decimalDigits: 0)
               .format(double.parse(harga!.toString()))),
-          leading: SizedBox(
-            height: 60,
-            width: 60,
-            child: Image.network(poster!, fit: BoxFit.fill),
-          )),
+          leading: Stack(children: [
+            SizedBox(
+              width: 50,
+              child: Image.network(poster!, fit: BoxFit.fill),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black.withOpacity(0.8),
+                padding: const EdgeInsets.all(2),
+                child: Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.orange, size: 16),
+                    Text(
+                      "${rating!.toDouble()}",
+                      style: bannerTS,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ])),
     );
   }
 }

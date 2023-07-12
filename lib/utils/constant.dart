@@ -45,6 +45,10 @@ TextStyle titleTS = const TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w700,
 );
+TextStyle subTS = const TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
 
 TextStyle dialogContentTS = const TextStyle(
   fontSize: 12,
@@ -53,6 +57,8 @@ TextStyle dialogContentTS = const TextStyle(
 TextStyle kategoriTS = const TextStyle(
   fontSize: 12,
 );
+
+TextStyle bannerTS = const TextStyle(fontSize: 12, color: greycardColor);
 
 TextStyle buttonTS =
     const TextStyle(fontWeight: FontWeight.w500, color: blackColor);

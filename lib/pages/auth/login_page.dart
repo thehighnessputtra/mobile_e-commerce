@@ -4,6 +4,7 @@ import 'package:test_aplikasi/pages/auth/register_page.dart';
 import 'package:test_aplikasi/services/firebase_services.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 import 'package:test_aplikasi/widgets/button_widget.dart';
+import 'package:test_aplikasi/widgets/dialog_widget.dart';
 import 'package:test_aplikasi/widgets/textfield_widget.dart';
 
 class LoginPage extends StatelessWidget {

@@ -16,51 +16,74 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(children: [
           StreamBuilder(
             stream:
                 FirebaseFirestore.instance.collection("produkList").snapshots(),
             builder: (context, snapshot) {
-              return CarouselSlider(
-                items: snapshot.data!.docs.map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Image(
+              if (snapshot.hasData) {
+                return CarouselSlider(
+                  items: snapshot.data!.docs.map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                            child: Stack(children: [
+                          Image(
                             image: NetworkImage("${i.get("screenshot")[0]}"),
                             fit: BoxFit.cover,
-                          ));
-                    },
-                  );
-                }).toList(),
-                options: CarouselOptions(
-                  height: 150,
-                  aspectRatio: 16 / 9,
-                  viewportFraction: 0.9,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 3),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  scrollDirection: Axis.horizontal,
-                ),
-              );
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black.withOpacity(0.8),
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                i.get("nama"),
+                                style: bannerTS,
+                              ),
+                            ),
+                          )
+                        ]));
+                      },
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    height: 150,
+                    aspectRatio: 16 / 9,
+                    initialPage: 0,
+                    viewportFraction: 1,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 2),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
             },
           ),
           sh20,
+          Text(
+            "TOP RATING",
+            style: subTS,
+          ),
           StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('produkList').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('produkList')
+                .orderBy("rating", descending: true)
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListProdukPage(
                   setCount: true,
-                  itemCount: 1,
+                  itemCount: 3,
                   listProduk: snapshot.data!.docs,
                 );
               }

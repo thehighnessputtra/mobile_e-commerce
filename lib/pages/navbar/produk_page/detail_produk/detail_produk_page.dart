@@ -1,7 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:test_aplikasi/services/firebase_services.dart';
 import 'package:test_aplikasi/utils/constant.dart';
+import 'package:test_aplikasi/widgets/button_widget.dart';
+import 'package:test_aplikasi/widgets/dialog_widget.dart';
 
 class DetailProdukPage extends StatefulWidget {
   String namaProduk;
@@ -31,6 +36,29 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
       appBar: AppBar(
         elevation: 0,
         title: Text(widget.namaProduk),
+      ),
+      floatingActionButton: ButtonWidget(
+        btnName: "BELI",
+        isPressed: true,
+        onPressed: () {
+          customDialog(context, confirmButton: true, yesPressed: () {
+            FirebaseService(FirebaseAuth.instance).updateToKeranjang(
+                email: FirebaseAuth.instance.currentUser!.email!,
+                totalHarga: widget.harga,
+                totalGame: widget.namaProduk,
+                context: context);
+            Navigator.pop(context);
+          },
+              title: "KONFIRMASI",
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  Text(
+                    "Apakah anda yakin ingin membeli produk ${widget.namaProduk} dengan harga ${NumberFormat.currency(locale: 'id', symbol: 'RP ', decimalDigits: 0).format(double.parse(widget.harga.toString()))}!",
+                    style: dialogContentTS,
+                  )
+                ]),
+              ));
+        },
       ),
       body: SingleChildScrollView(
         padding: pagePadding,

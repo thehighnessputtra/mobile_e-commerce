@@ -30,7 +30,8 @@ class FirebaseService {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {
                 postRegistToFirestore(
-                    avaName: avaName, avaURL: avaURL, email: email, name: name)
+                    avaName: avaName, avaURL: avaURL, email: email, name: name),
+                postKeranjangToFirestore(email: email)
               });
 
       // ignore: use_build_context_synchronously
@@ -88,6 +89,57 @@ class FirebaseService {
     }
   }
 
+  Future<void> updateToKeranjang(
+      {required String email,
+      required int totalHarga,
+      required String totalGame,
+      required BuildContext context}) async {
+    try {
+      await updateKeranjangToFirestore(
+        email: email,
+        totalHarga: totalHarga,
+        totalGame: totalGame,
+      );
+
+      // ignore: use_build_context_synchronously
+      authRoute(
+          context,
+          "Sukses memasukan ke keranjang!",
+          NavBottomBar(
+            currentIndex: 4,
+          ));
+    } on FirebaseAuthException catch (e) {
+      // dialogInfo(context, e.message!);
+      customDialog(context, title: "INFO", content: Text(e.message!));
+    }
+  }
+
+  Future<void> deleteFromKeranjang(
+      {required String email,
+      required int totalHarga,
+      required String totalGame,
+      required BuildContext context}) async {
+    try {
+      await deleteKeranjangToFirestore(
+        email: email,
+        totalHarga: totalHarga,
+        totalGame: totalGame,
+      );
+
+      // ignore: use_build_context_synchronously
+      authRoute(
+          context,
+          isBack: true,
+          "Sukses delete $totalGame!",
+          NavBottomBar(
+            currentIndex: 3,
+          ));
+    } on FirebaseAuthException catch (e) {
+      // dialogInfo(context, e.message!);
+      customDialog(context, title: "INFO", content: Text(e.message!));
+    }
+  }
+
   Future<void> signOut(BuildContext context) async {
     try {
       await auth.signOut();
@@ -99,13 +151,17 @@ class FirebaseService {
     }
   }
 
-  authRoute(context, String text, Widget page) {
+  authRoute(context, String text, Widget page, {bool isBack = false}) {
     customDialog(context, title: "INFO", content: Text(text));
-
-    Future.delayed(
-      const Duration(seconds: 2),
-      () => navReplaceTransition(context, page),
-    );
+    isBack == false
+        ? Future.delayed(
+            const Duration(seconds: 2),
+            () => navReplaceTransition(context, page),
+          )
+        : Future.delayed(
+            const Duration(seconds: 2),
+            () => navBackTransition(context),
+          );
   }
 
   postRegistToFirestore(
@@ -120,6 +176,49 @@ class FirebaseService {
       'name': name,
       'avatarURL': avaURL,
       'avatarName': avaName
+    });
+  }
+
+  postKeranjangToFirestore({
+    required String email,
+  }) async {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection('keranjang');
+    ref.doc(user!.email).set({
+      'email': email,
+      'totalGame': [],
+      'totalHarga': [],
+    });
+  }
+
+  updateKeranjangToFirestore({
+    required String email,
+    required String totalGame,
+    required int totalHarga,
+  }) async {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection('keranjang');
+    ref.doc(user!.email).update({
+      'email': email,
+      'totalGame': FieldValue.arrayUnion([totalGame]),
+      'totalHarga': FieldValue.arrayUnion([totalHarga]),
+    });
+  }
+
+  deleteKeranjangToFirestore({
+    required String email,
+    required String totalGame,
+    required int totalHarga,
+  }) async {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection('keranjang');
+    ref.doc(user!.email).update({
+      'email': email,
+      'totalGame': FieldValue.arrayRemove([totalGame]),
+      'totalHarga': FieldValue.arrayRemove([totalHarga]),
     });
   }
 
