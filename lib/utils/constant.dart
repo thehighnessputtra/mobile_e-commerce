@@ -46,5 +46,13 @@ TextStyle titleTS = const TextStyle(
   fontWeight: FontWeight.w700,
 );
 
+TextStyle dialogContentTS = const TextStyle(
+  fontSize: 12,
+);
+
+TextStyle kategoriTS = const TextStyle(
+  fontSize: 12,
+);
+
 TextStyle buttonTS =
     const TextStyle(fontWeight: FontWeight.w500, color: blackColor);

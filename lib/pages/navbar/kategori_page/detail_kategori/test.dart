@@ -6,14 +6,14 @@ import 'package:test_aplikasi/pages/navbar/produk_page/produk_card.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 import 'package:test_aplikasi/widgets/transition_widget.dart';
 
-class ProdukPage extends StatefulWidget {
-  const ProdukPage({super.key});
+class TestPage extends StatefulWidget {
+  const TestPage({super.key});
 
   @override
-  State<ProdukPage> createState() => _ProdukPageState();
+  State<TestPage> createState() => _TestPageState();
 }
 
-class _ProdukPageState extends State<ProdukPage> {
+class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class _ProdukPageState extends State<ProdukPage> {
               FirebaseFirestore.instance.collection('produkList').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListProdukPage(
+              return ListTestPage(
                 listProduk: snapshot.data!.docs,
               );
             }
@@ -36,21 +36,21 @@ class _ProdukPageState extends State<ProdukPage> {
   }
 }
 
-class ListProdukPage extends StatefulWidget {
+class ListTestPage extends StatefulWidget {
   final List<DocumentSnapshot> listProduk;
   int itemCount;
   bool setCount;
-  ListProdukPage(
+  ListTestPage(
       {super.key,
       required this.listProduk,
       this.itemCount = 1,
       this.setCount = false});
 
   @override
-  State<ListProdukPage> createState() => _ListProdukPageState();
+  State<ListTestPage> createState() => _ListTestPageState();
 }
 
-class _ListProdukPageState extends State<ListProdukPage> {
+class _ListTestPageState extends State<ListTestPage> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

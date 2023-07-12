@@ -28,8 +28,9 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: pagePadding,
+        physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -46,8 +47,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ClipOval(
                       child: Material(
                           child: Ink.image(
-                    image: NetworkImage(
-                        "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Clipart.png"),
+                    image: NetworkImage(avatarURL == null
+                        ? "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Clipart.png"
+                        : avatarURL!),
                     fit: BoxFit.cover,
                     width: 120,
                     height: 120,
@@ -56,7 +58,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       bottom: 0,
                       right: 4,
                       child: InkWell(
-                        onTap: () async {},
+                        onTap: () async {
+                          uploadImage();
+                        },
                         child: ClipOval(
                             child: Container(
                                 decoration: const BoxDecoration(
@@ -90,22 +94,29 @@ class _RegisterPageState extends State<RegisterPage> {
             sh5,
             ButtonWidget(
                 btnName: "CONFIRM",
-                isPressed: false,
+                isPressed: true,
                 onPressed: () {
                   customDialog(context,
                       title: "Confirm Regist",
                       confirmButton: true,
                       content: SingleChildScrollView(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_controllerEmail.text),
-                            Text(_controllerPassword.text)
+                            Text("Nama : ${_controllerNama.text}",
+                                style: dialogContentTS),
+                            Text("Email : ${_controllerEmail.text}",
+                                style: dialogContentTS),
                           ],
                         ),
                       ), yesPressed: () {
-                    print("Regist sucess!");
-                    print("Regist success!");
-                    print("Regist succsess!");
+                    FirebaseService(FirebaseAuth.instance).signUpEmail(
+                        email: _controllerEmail.text,
+                        password: _controllerPassword.text,
+                        name: _controllerNama.text,
+                        avaURL: avatarURL!,
+                        avaName: avatarName!,
+                        context: context);
                   });
                 }),
             ButtonWidget(
@@ -149,10 +160,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // ignore: use_build_context_synchronously
       customDialog(context,
-          title: "INFO", content: Text("Avatar sukses diupload!"));
+          title: "INFO", content: const Text("Avatar sukses diupload!"));
     } else {
       customDialog(context,
-          title: "INFO", content: Text("Avatar gagal diupload!"));
+          title: "INFO", content: const Text("Avatar gagal diupload!"));
     }
   }
 }

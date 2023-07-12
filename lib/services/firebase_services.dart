@@ -65,6 +65,29 @@ class FirebaseService {
     }
   }
 
+  Future<void> updateProfile(
+      {required String email,
+      required String name,
+      required String avaURL,
+      required String avaName,
+      required BuildContext context}) async {
+    try {
+      await updateProfileToFirestore(
+          email: email, name: name, avaURL: avaURL, avaName: avaName);
+
+      // ignore: use_build_context_synchronously
+      authRoute(
+          context,
+          "Update profile success!",
+          NavBottomBar(
+            currentIndex: 3,
+          ));
+    } on FirebaseAuthException catch (e) {
+      // dialogInfo(context, e.message!);
+      customDialog(context, title: "INFO", content: Text(e.message!));
+    }
+  }
+
   Future<void> signOut(BuildContext context) async {
     try {
       await auth.signOut();
@@ -93,6 +116,21 @@ class FirebaseService {
     var user = FirebaseAuth.instance.currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
     ref.doc(user!.email).set({
+      'email': email,
+      'name': name,
+      'avatarURL': avaURL,
+      'avatarName': avaName
+    });
+  }
+
+  updateProfileToFirestore(
+      {required String email,
+      required String name,
+      required String avaURL,
+      required String avaName}) async {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+    ref.doc(user!.email).update({
       'email': email,
       'name': name,
       'avatarURL': avaURL,

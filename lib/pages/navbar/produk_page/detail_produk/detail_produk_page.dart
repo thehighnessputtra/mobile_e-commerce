@@ -1,72 +1,198 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:test_aplikasi/utils/constant.dart';
 
 class DetailProdukPage extends StatefulWidget {
-  const DetailProdukPage({super.key});
+  String namaProduk;
+  String poster;
+  int harga;
+  List kategori;
+  String deskripsi;
+
+  List screenshot;
+  DetailProdukPage(
+      {super.key,
+      required this.namaProduk,
+      required this.harga,
+      required this.kategori,
+      required this.deskripsi,
+      required this.poster,
+      required this.screenshot});
 
   @override
   State<DetailProdukPage> createState() => _DetailProdukPageState();
 }
 
 class _DetailProdukPageState extends State<DetailProdukPage> {
-  final List<String> imgList = [
-    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-    'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text("Produk"),
+        title: Text(widget.namaProduk),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.yellow,
-            height: 200,
-          ),
-          sh5,
-          CarouselSlider(
-            items: [1, 2, 3, 4, 5].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: const BoxDecoration(color: Colors.yellow),
-                      child: Text(
-                        'text $i',
-                        style: const TextStyle(fontSize: 16.0),
-                      ));
-                },
-              );
-            }).toList(),
-            options: CarouselOptions(
-              height: 70,
-              aspectRatio: 16 / 9,
-              viewportFraction: 0.4,
-              initialPage: 0,
-              enableInfiniteScroll: true,
-              reverse: false,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              scrollDirection: Axis.horizontal,
+      body: SingleChildScrollView(
+        padding: pagePadding,
+        child: Column(
+          children: [
+            SizedBox(
+              child: Image.network(
+                widget.poster,
+                fit: BoxFit.cover,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: 200,
             ),
-          ),
-          sh10,
-          Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
-        ],
+            sh5,
+            CarouselSlider(
+              items: widget.screenshot.map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: const BoxDecoration(color: Colors.yellow),
+                        child: Image.network(
+                          i,
+                          fit: BoxFit.cover,
+                        ));
+                  },
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 70,
+                aspectRatio: 16 / 9,
+                viewportFraction: 0.4,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                scrollDirection: Axis.horizontal,
+              ),
+            ),
+            sh10,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: widget.kategori.map((e) {
+                return Container(
+                    padding: const EdgeInsets.all(3),
+                    margin: const EdgeInsets.only(right: 4),
+                    color: Colors.yellow,
+                    child: Text(e));
+              }).toList(),
+            ),
+            Text(widget.deskripsi)
+          ],
+        ),
       ),
+      // Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: StreamBuilder(
+      //     stream:
+      //         FirebaseFirestore.instance.collection('produkList').snapshots(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.hasData) {
+      //         return DetailProduk(
+      //           detailProduk: snapshot.data!.docs,
+      //           namaProduk: widget.namaProduk,
+      //         );
+      //       }
+      //       return const Center(child: CircularProgressIndicator());
+      //     },
+      //   );
+      // ),
     );
   }
 }
+
+// class DetailProduk extends StatefulWidget {
+//   final List<DocumentSnapshot> detailProduk;
+//   String namaProduk;
+//   DetailProduk(
+//       {super.key, required this.detailProduk, required this.namaProduk});
+
+//   @override
+//   State<DetailProduk> createState() => _DetailProdukState();
+// }
+
+// class _DetailProdukState extends State<DetailProduk> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//         itemCount: widget.detailProduk.length,
+//         itemBuilder: (context, index) {
+//           final itemsList = widget.detailProduk[index];
+//           String storageNama = itemsList['nama'];
+//           String storageDeskripsi = itemsList['deskripsi'];
+//           String storagePoster = itemsList['poster'];
+//           int storageHarga = itemsList['harga'];
+//           List storageKategori = itemsList['kategori'];
+//           List storageScreenshot = itemsList['screenshot'];
+
+//           // return
+//           // SingleChildScrollView(
+//           //     child: Column(
+//           //       children: [
+//           //         SizedBox(
+//           //           child: Image.network(
+//           //             storagePoster,
+//           //             fit: BoxFit.cover,
+//           //           ),
+//           //           width: MediaQuery.of(context).size.width,
+//           //           height: 200,
+//           //         ),
+//           //         sh5,
+//           //         CarouselSlider(
+//           //           items: storageScreenshot.map((i) {
+//           //             return Builder(
+//           //               builder: (BuildContext context) {
+//           //                 return Container(
+//           //                     width: MediaQuery.of(context).size.width,
+//           //                     margin: const EdgeInsets.symmetric(
+//           //                         horizontal: 5.0),
+//           //                     decoration:
+//           //                         const BoxDecoration(color: Colors.yellow),
+//           //                     child: Image.network(
+//           //                       i,
+//           //                       fit: BoxFit.cover,
+//           //                     ));
+//           //               },
+//           //             );
+//           //           }).toList(),
+//           //           options: CarouselOptions(
+//           //             height: 70,
+//           //             aspectRatio: 16 / 9,
+//           //             viewportFraction: 0.4,
+//           //             initialPage: 0,
+//           //             enableInfiniteScroll: true,
+//           //             reverse: false,
+//           //             autoPlay: true,
+//           //             autoPlayInterval: const Duration(seconds: 3),
+//           //             autoPlayAnimationDuration:
+//           //                 const Duration(milliseconds: 800),
+//           //             autoPlayCurve: Curves.fastOutSlowIn,
+//           //             scrollDirection: Axis.horizontal,
+//           //           ),
+//           //         ),
+//           //         sh10,
+//           //         Row(
+//           //           mainAxisAlignment: MainAxisAlignment.start,
+//           //           children: storageKategori.map((e) {
+//           //             return Container(
+//           //                 padding: const EdgeInsets.all(3),
+//           //                 margin: const EdgeInsets.only(right: 4),
+//           //                 color: Colors.yellow,
+//           //                 child: Text(e));
+//           //           }).toList(),
+//           //         ),
+//           //         Text(storageDeskripsi)
+//           //       ],
+//           //     ),
+//           //   )
+//         });
+//   }
+// }
